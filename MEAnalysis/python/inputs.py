@@ -166,6 +166,63 @@ sparse_data = {
             "CMS_ttH_CSVlfstats1",
             "CMS_ttH_CSVlfstats2"
         ]
+    ),
+    "Aug12": SparseHistogram(
+        infile = "file:///mnt/t3nfs01/data01/shome/jpata/tth/datacards/Sparse_Aug12.root",
+        ngen = {
+            'DoubleEG': 91090784.0,
+            'DoubleMuon': 116498224.0,
+            'MuonEG': 44854952.0,
+            'SingleElectron': 21175806.0,
+            'SingleMuon': 75904880.0,
+            'TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8': 9450537.0,
+            'TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8': 10331895.0,
+            'TT_TuneCUETP8M1_13TeV-powheg-pythia8': 2003312.0,
+            'ttHToNonbb_M125_13TeV_powheg_pythia8': 3324870.0,
+            'ttHTobb_M125_13TeV_powheg_pythia8': 3882314.0,
+        },
+        # brilcalc on golden json, overestimated by a few % for SingleElectron
+        # http://dashb-cms-job.cern.ch/dashboard/templates/task-analysis/#user=Joosep+Pata&refresh=60&table=Mains&p=1&records=-1&sorting%5B%5D=2&sorting%5B%5D=desc&activemenu=2&pattern=*tth_Aug3_V24_v2*&task=&from=&till=&timerange=lastMonth
+        lumi = {
+            "SingleMuon": 3139.799,
+            "SingleElectron": 687.397,
+            "MuonEG": 8630.293,
+            "DoubleEG": 4961.5731,
+            "DoubleMuon": 11175.781,
+        },
+        blr_cuts = {
+            "sl_j4_t2": 20,
+            "sl_j4_t3": 1.1,
+            "sl_j4_tge4": -20,
+            
+            "sl_j5_t2": 20,
+            "sl_j5_t3": 2.3,
+            "sl_j5_tge4": -20,
+            
+            "sl_jge6_t2": -0.4,
+            "sl_jge6_t3": 2.9,
+            "sl_jge6_tge4": -20,
+
+            "dl_j3_t2": 20,
+            "dl_j3_t3": -20,
+            "dl_jge4_t2": 20,
+            "dl_jge4_t3": 2.3,
+            "dl_jge4_tge4": -20,
+        },
+        systematics = [
+            "CMS_scale_j",
+            "CMS_res_j",
+            "pu",
+            "CMS_ttH_CSVcferr1",
+            "CMS_ttH_CSVcferr2",
+            "CMS_ttH_CSVhf",
+            "CMS_ttH_CSVhfstats1",
+            "CMS_ttH_CSVhfstats2",
+            "CMS_ttH_CSVjes",
+            "CMS_ttH_CSVlf",
+            "CMS_ttH_CSVlfstats1",
+            "CMS_ttH_CSVlfstats2"
+        ]
     )
 }
 

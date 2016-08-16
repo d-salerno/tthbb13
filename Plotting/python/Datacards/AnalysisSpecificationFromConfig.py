@@ -109,7 +109,7 @@ def analysisFromConfig(config_file_path):
             cuts = []
             # ..Process Cut
             if config.has_option(sample, "process_cut"):
-                cuts += processCut( config.get(sample, "process_cut"))
+                cuts += [processCut( config.get(sample, "process_cut"))]
             # ..Other cuts
             if config.has_option(sample, "cuts"):
                 for cut_name, lower, upper in triplewise(config.get(sample,"cuts").split()):
@@ -177,9 +177,9 @@ def analysisFromConfig(config_file_path):
                     scale_uncertainties[k][name] = float(uncert)
 
             if config.has_option(cat, "rebin"):
-                rebin = float(config.get(cat,"rebin"))
+                rebin = int(config.get(cat,"rebin"))
             else:
-                rebin = 1.
+                rebin = 1
 
             cats.append(
                 Category(
@@ -193,7 +193,29 @@ def analysisFromConfig(config_file_path):
                     scale_uncertainties = scale_uncertainties, 
                     discriminator = config.get(cat, "discriminator"),
                     src_histogram = config.get(template, "src_histogram"),
-                    rebin = rebin))
+                    rebin = rebin,
+                    do_limit = True))
+
+            # Also add control variables
+            if config.has_option(cat, "control_variables"):
+                for cv in config.get(cat, "control_variables").split():
+                    cats.append(
+                        Category(
+                            name = cat,
+                            cuts = cuts,
+                            samples = mc_samples,
+                            data_samples = data_samples,
+                            signal_processes = signal_processes, 
+                            common_shape_uncertainties = common_shape_uncertainties, 
+                            common_scale_uncertainties = common_scale_uncertainties, 
+                            scale_uncertainties = scale_uncertainties, 
+                            discriminator = cv,
+                            src_histogram = config.get(template, "src_histogram"),
+                            rebin = rebin,
+                            do_limit = False))
+                
+
+
             # End loop over categories
             
         analysis_groups[group] = cats        
