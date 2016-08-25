@@ -18,6 +18,7 @@ workflows = [
     "localtesting", #run combined jobs locally
     "localtesting_withme", #run combined jobs locally
     "testing_withme" #single-lumi jobs, a few samples
+    "testing_hadronic_withme" #single-lumi jobs, a few samples   
 ]
 
 import argparse
