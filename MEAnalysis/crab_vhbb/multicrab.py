@@ -17,7 +17,7 @@ workflows = [
     "testing", #single-lumi jobs, a few samples
     "localtesting", #run combined jobs locally
     "localtesting_withme", #run combined jobs locally
-    "testing_withme" #single-lumi jobs, a few samples
+    "testing_withme", #single-lumi jobs, a few samples
     "testing_hadronic_withme" #single-lumi jobs, a few samples   
 ]
 
@@ -294,7 +294,7 @@ for k in ["ttHTobb", "TTbar_inc", "SingleMuon-Run2016B-PromptReco-v1"]:
 workflow_datasets["testing_hadronic_withme"] = {}
 for k in ["ttHTobb", "TTbar_inc", "QCD1000", "JetHT-Run2016B-PromptReco-v1"]:
     D = deepcopy(datasets[k])
-    D["perjob"] = int(1)
+    D["perjob"] = int(5)
     D["maxlumis"] = 10 * D["perjob"]
     D["runtime"] = int(D["runtime"]/5)
     D["mem_cfg"] = me_cfgs["hadronic"]
