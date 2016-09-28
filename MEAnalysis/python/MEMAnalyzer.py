@@ -437,7 +437,8 @@ class MEAnalyzer(FilterAnalyzer):
                         fstate,
                         hypo,
                         self.vars_to_integrate,
-                        self.vars_to_marginalize
+                        self.vars_to_marginalize,
+                        -1 #ncalls                   ####DS-temp, default is -1
                     )
                     print "Integrator::run done hypo={0} conf={1} cat={2}".format(hypo, confname, event.cat) #DS
 

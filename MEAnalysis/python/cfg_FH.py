@@ -5,17 +5,21 @@ from ROOT import MEM
 #for k in ["FH_4w2h2t", "FH_3w2h2t", "FH_4w2h1t", "FH_0w2h2t", "FH_0w2h1t", "FH_0w1h2t"]:
 
 for k, v in Conf.mem_configs.items():
+    print "mem_configs[",k,"].cfg.rel = ",Conf.mem_configs[k].cfg.rel
     Conf.mem_configs[k].cfg.do_prefit = 0 #selects perms based on highest MEprob (Minimisation)
-    Conf.mem_configs[k].cfg.do_perm_filtering = 1 #does runtime pruning of permutations
-
-#    Conf.mem_configs[k].cfg.n_max_calls = 20000 #number of function calls per iteration (5 iterations)
-#    Conf.mem_configs[k].cfg.is_default = False #must be false to set n_max_calls
+    Conf.mem_configs[k].cfg.do_perm_filtering = 0 #does runtime pruning of permutations - feature broken
+    Conf.mem_configs[k].cfg.abs = 10.0 #the absolute tolerance, has no affect
+    Conf.mem_configs[k].cfg.rel = 0.02 #the relative tolerance, manually implemented
+    Conf.mem_configs[k].cfg.two_stage = 1 #two_stage integration
+    print "mem_configs[",k,"].cfg.rel = ",Conf.mem_configs[k].cfg.rel
 
 #other options
 Conf.general["passall"] = False
+Conf.general["systematics"] = ["nominal"]
 Conf.leptons["selection"] = lambda event: event.is_fh 
 Conf.mem["selection"] = lambda event: (event.is_fh 
                                        and event.cat in ["cat7","cat8","cat9","cat10","cat11"]
+                                       #and event.cat in ["cat8"]
                                        #and event.btag_LR_4b_2b > 0.95
                                        )
 Conf.jets["untaggedSelection"] = "btagCSV" #or "btagLR"
