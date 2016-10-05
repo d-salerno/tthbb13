@@ -3,12 +3,16 @@ import os
 import subprocess
 from ROOT import TH1F, TCanvas, TFile, TObject
 
-sample = "QCD1500"
-copy = 1
-extract = 1
-analyse = 1
+sample = "ttHbb"
+copy = 0
+extract = 0
+analyse = 0
+report = 1
 
-se = "root://storage01.lcg.cscs.ch/pnfs/lcg.cscs.ch/cms/trivcat//store/user/dsalerno"
+#se = "root://storage01.lcg.cscs.ch/pnfs/lcg.cscs.ch/cms/trivcat//store/user/dsalerno"
+se = "storage01.lcg.cscs.ch"
+folder = "/pnfs/lcg.cscs.ch/cms/trivcat//store/user/dsalerno"
+
 path = {
     # "QCD300":"tth/VHBBHeppyV21_tthbbV9_v3/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBBHeppyV21_tthbbV9_v3/160514_193325",
     # "QCD500":"tth/VHBBHeppyV21_tthbbV9_v3/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBBHeppyV21_tthbbV9_v3/160514_194135",
@@ -20,32 +24,38 @@ path = {
     # "ttHbb":"tth/VHBBHeppyV21_tthbbV9_v3_3/ttHTobb_M125_13TeV_powheg_pythia8/VHBBHeppyV21_tthbbV9_v3_3/160518_110721",
     # "ttHNon":"tth/VHBBHeppyV21_tthbbV9_v3_3/ttHToNonbb_M125_13TeV_powheg_pythia8/VHBBHeppyV21_tthbbV9_v3_3/160518_110839",
 
-    "QCD300":"tth/VHBBHeppyV21_tthbbV9_v2/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBBHeppyV21_tthbbV9_v2/160503_194235",
-    "QCD500":"tth/VHBBHeppyV21_tthbbV9_v2/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBBHeppyV21_tthbbV9_v2/160503_194354",
-    "QCD700":"tth/VHBBHeppyV21_tthbbV9_v2/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBBHeppyV21_tthbbV9_v2/160503_194510",
-    "QCD1000":"tth/VHBBHeppyV21_tthbbV9_v2/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBBHeppyV21_tthbbV9_v2/160503_194632",
-    "QCD1500":"tth/VHBBHeppyV21_tthbbV9_v2/QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBBHeppyV21_tthbbV9_v2/160503_194746",
-    "QCD2000":"tth/VHBBHeppyV21_tthbbV9_v2/QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBBHeppyV21_tthbbV9_v2/160503_194905",
-    "TTbar":"tth/VHBBHeppyV21_tthbbV9_v2/TT_TuneCUETP8M1_13TeV-powheg-pythia8/VHBBHeppyV21_tthbbV9_v2/160503_194119",
-    "ttHbb":"tth/VHBBHeppyV21_tthbbV9_v2/ttHTobb_M125_13TeV_powheg_pythia8/VHBBHeppyV21_tthbbV9_v2/160503_194005",
+    #"QCD300":"",
+    #"QCD500":"",
+    #"QCD700":"",
+    #"QCD1000":"",
+    #"QCD1500":"",
+    #"QCD2000":"",
+    #"TTbar":"",
+    "ttHbb":"tth/FHwithme_2pcrel_1/ttHTobb_M125_13TeV_powheg_pythia8/FHwithme_2pcrel_1/161003_115824",
+    #"data":"",
+
 }
 
-endpath = "/scratch/dsalerno/tth/VHBBHeppyV21_tthbbV9_v2/"
+endpath = "/scratch/dsalerno/tth/80x_test2/FHwithme_2pcrel_1/"
 destination = endpath+sample
 
 if( copy ):
-    listdir = "gfal-ls "+se+"/"+path[sample]
+    #listdir = "gfal-ls "+se+"/"+path[sample]
+    listdir = "xrdfs "+se+" ls "+folder+"/"+path[sample]
     p = subprocess.Popen(listdir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     
     for line in p.stdout.readlines():
-        directory = line.split()[0]
+        #directory = line.split()[0]
+        directory = (line.split("/")[-1]).split()[0]
+        print ""
         print "directory ", directory
         listlog = listdir+"/"+directory+"/log"
         q = subprocess.Popen(listlog, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
         for line in q.stdout.readlines():
-            logfile = line.split()[0]
-            #print "logfile ", logfile
+            #logfile = line.split()[0]
+            logfile = (line.split("/")[-1]).split()[0]
+            print "logfile ", logfile
             if( os.path.isfile(destination+"/"+logfile) ):
                 print logfile, " already copied"
                 continue
@@ -55,7 +65,8 @@ if( copy ):
             if( os.path.isfile(destination+"/"+stdoutfile) ):
                 print logfile, " already extracted"
                 continue
-            copylog = "gfal-copy "+se+"/"+path[sample]+"/"+directory+"/log/"+logfile+" file://"+destination
+            #copylog = "gfal-copy "+se+"/"+path[sample]+"/"+directory+"/log/"+logfile+" file://"+destination
+            copylog = "xrdcp root://"+se+"/"+folder+"/"+path[sample]+"/"+directory+"/log/"+logfile+" /"+destination
             #print copylog
             os.system(copylog)
 
@@ -99,10 +110,10 @@ if( analyse ):
     h_0_9_022   = TH1F("h_0_9_022","h_0_9_022",2000,0,2000)
     h_0_9_021   = TH1F("h_0_9_021","h_0_9_021",2000,0,2000)
 
-    h_0_10_421   = TH1F("h_0_10_422","h_0_10_422",300,0,300)    
+    h_0_10_421   = TH1F("h_0_10_421","h_0_10_421",300,0,300)    
     h_0_10_021   = TH1F("h_0_10_021","h_0_10_021",200,0,200)
 
-    h_0_11_421   = TH1F("h_0_11_422","h_0_11_422",200,0,200)    
+    h_0_11_421   = TH1F("h_0_11_421","h_0_11_421",200,0,200)    
     h_0_11_021   = TH1F("h_0_11_021","h_0_11_021",200,0,200)
 
     h_1_7_322   = TH1F("h_1_7_322","h_1_7_322",300,0,300)
@@ -110,7 +121,7 @@ if( analyse ):
     h_1_7_021   = TH1F("h_1_7_021","h_1_7_021",500,0,500)
 
     h_1_8_422   = TH1F("h_1_8_422","h_1_8_422",200,0,200)    
-    h_1_8_322   = TH1F("h_1_8_322","h_1_8_322",500,0,500)
+    h_1_8_322   = TH1F("h_1_8_322","h_1_8_322",800,0,800)
     h_1_8_022   = TH1F("h_1_8_022","h_1_8_022",500,0,500)
     h_1_8_021   = TH1F("h_1_8_021","h_1_8_021",500,0,500)
 
@@ -118,10 +129,10 @@ if( analyse ):
     h_1_9_022   = TH1F("h_1_9_022","h_1_9_022",2000,0,2000)
     h_1_9_021   = TH1F("h_1_9_021","h_1_9_021",2000,0,2000)
 
-    h_1_10_421   = TH1F("h_1_10_422","h_1_10_422",500,0,500)    
+    h_1_10_421   = TH1F("h_1_10_421","h_1_10_421",500,0,500)    
     h_1_10_021   = TH1F("h_1_10_021","h_1_10_021",300,0,300)
 
-    h_1_11_421   = TH1F("h_1_11_422","h_1_11_422",200,0,200)    
+    h_1_11_421   = TH1F("h_1_11_421","h_1_11_421",200,0,200)    
     h_1_11_021   = TH1F("h_1_11_021","h_1_11_021",200,0,200)
 
     s = subprocess.Popen("ls "+destination, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -290,3 +301,94 @@ if( analyse ):
     h_1_11_021.Write("", TObject.kOverwrite)
 
     outf.Close()
+
+if( report ):
+    outf = TFile.Open(endpath+"/jobtime.root")
+    outf.cd()
+    
+    hh_0_7_322   = outf.Get(sample+"/h_0_7_322")
+    hh_0_7_022   = outf.Get(sample+"/h_0_7_022")
+    hh_0_7_021   = outf.Get(sample+"/h_0_7_021")
+
+    hh_0_8_422   = outf.Get(sample+"/h_0_8_422")
+    hh_0_8_322   = outf.Get(sample+"/h_0_8_322")
+    hh_0_8_022   = outf.Get(sample+"/h_0_8_022")
+    hh_0_8_021   = outf.Get(sample+"/h_0_8_021")
+
+    hh_0_9_422   = outf.Get(sample+"/h_0_9_422")
+    hh_0_9_022   = outf.Get(sample+"/h_0_9_022")
+    hh_0_9_021   = outf.Get(sample+"/h_0_9_021")
+
+    hh_0_10_421   = outf.Get(sample+"/h_0_10_421")
+    hh_0_10_021   = outf.Get(sample+"/h_0_10_021")
+
+    hh_0_11_421   = outf.Get(sample+"/h_0_11_421")
+    hh_0_11_021   = outf.Get(sample+"/h_0_11_021")
+
+    hh_1_7_322   = outf.Get(sample+"/h_1_7_322")
+    hh_1_7_022   = outf.Get(sample+"/h_1_7_022")
+    hh_1_7_021   = outf.Get(sample+"/h_1_7_021")
+
+    hh_1_8_422   = outf.Get(sample+"/h_1_8_422")
+    hh_1_8_322   = outf.Get(sample+"/h_1_8_322")
+    hh_1_8_022   = outf.Get(sample+"/h_1_8_022")
+    hh_1_8_021   = outf.Get(sample+"/h_1_8_021")
+
+    hh_1_9_422   = outf.Get(sample+"/h_1_9_422")
+    hh_1_9_022   = outf.Get(sample+"/h_1_9_022")
+    hh_1_9_021   = outf.Get(sample+"/h_1_9_021")
+
+    hh_1_10_421   = outf.Get(sample+"/h_1_10_421")
+    hh_1_10_021   = outf.Get(sample+"/h_1_10_021")
+
+    hh_1_11_421   = outf.Get(sample+"/h_1_11_421")
+    hh_1_11_021   = outf.Get(sample+"/h_1_11_021")
+
+    print "\nMethod Events Mean StdDev"
+    print "\n***cat7***"
+    print "ttH_hypo"
+    print "322", hh_0_7_322.GetEntries(), hh_0_7_322.GetMean(), hh_0_7_322.GetStdDev()
+    print "022", hh_0_7_022.GetEntries(), hh_0_7_022.GetMean(), hh_0_7_022.GetStdDev()
+    print "021", hh_0_7_021.GetEntries(), hh_0_7_021.GetMean(), hh_0_7_021.GetStdDev()
+    print "ttbb_hypo"
+    print "322", hh_1_7_322.GetEntries(), hh_1_7_322.GetMean(), hh_1_7_322.GetStdDev()
+    print "022", hh_1_7_022.GetEntries(), hh_1_7_022.GetMean(), hh_1_7_022.GetStdDev()
+    print "021", hh_1_7_021.GetEntries(), hh_1_7_021.GetMean(), hh_1_7_021.GetStdDev()
+
+    print "\n***cat8***"
+    print "ttH_hypo"
+    print "422", hh_0_8_422.GetEntries(), hh_0_8_422.GetMean(), hh_0_8_422.GetStdDev()
+    print "322", hh_0_8_322.GetEntries(), hh_0_8_322.GetMean(), hh_0_8_322.GetStdDev()
+    print "022", hh_0_8_022.GetEntries(), hh_0_8_022.GetMean(), hh_0_8_022.GetStdDev()
+    print "021", hh_0_8_021.GetEntries(), hh_0_8_021.GetMean(), hh_0_8_021.GetStdDev()
+    print "ttbb_hypo"
+    print "422", hh_1_8_422.GetEntries(), hh_1_8_422.GetMean(), hh_1_8_422.GetStdDev()
+    print "322", hh_1_8_322.GetEntries(), hh_1_8_322.GetMean(), hh_1_8_322.GetStdDev()
+    print "022", hh_1_8_022.GetEntries(), hh_1_8_022.GetMean(), hh_1_8_022.GetStdDev()
+    print "021", hh_1_8_021.GetEntries(), hh_1_8_021.GetMean(), hh_1_8_021.GetStdDev()
+
+    print "\n***cat9***"
+    print "ttH_hypo"
+    print "422", hh_0_9_422.GetEntries(), hh_0_9_422.GetMean(), hh_0_9_422.GetStdDev()
+    print "022", hh_0_9_022.GetEntries(), hh_0_9_022.GetMean(), hh_0_9_022.GetStdDev()
+    print "021", hh_0_9_021.GetEntries(), hh_0_9_021.GetMean(), hh_0_9_021.GetStdDev()
+    print "ttbb_hypo"
+    print "422", hh_1_9_422.GetEntries(), hh_1_9_422.GetMean(), hh_1_9_422.GetStdDev()
+    print "022", hh_1_9_022.GetEntries(), hh_1_9_022.GetMean(), hh_1_9_022.GetStdDev()
+    print "021", hh_1_9_021.GetEntries(), hh_1_9_021.GetMean(), hh_1_9_021.GetStdDev()
+
+    print "\n***cat10***"
+    print "ttH_hypo"
+    print "421", hh_0_10_421.GetEntries(), hh_0_10_421.GetMean(), hh_0_10_421.GetStdDev()
+    print "021", hh_0_10_021.GetEntries(), hh_0_10_021.GetMean(), hh_0_10_021.GetStdDev()
+    print "ttbb_hypo"
+    print "421", hh_1_10_421.GetEntries(), hh_1_10_421.GetMean(), hh_1_10_421.GetStdDev()
+    print "021", hh_1_10_021.GetEntries(), hh_1_10_021.GetMean(), hh_1_10_021.GetStdDev()
+
+    print "\n***cat11***"
+    print "ttH_hypo"
+    print "421", hh_0_11_421.GetEntries(), hh_0_11_421.GetMean(), hh_0_11_421.GetStdDev()
+    print "021", hh_0_11_021.GetEntries(), hh_0_11_021.GetMean(), hh_0_11_021.GetStdDev()
+    print "ttbb_hypo"
+    print "421", hh_1_11_421.GetEntries(), hh_1_11_421.GetMean(), hh_1_11_421.GetStdDev()
+    print "021", hh_1_11_021.GetEntries(), hh_1_11_021.GetMean(), hh_1_11_021.GetStdDev()
