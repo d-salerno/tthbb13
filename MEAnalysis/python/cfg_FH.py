@@ -9,7 +9,7 @@ for k, v in Conf.mem_configs.items():
     Conf.mem_configs[k].cfg.do_prefit = 0 #selects perms based on highest MEprob (Minimisation)
     Conf.mem_configs[k].cfg.do_perm_filtering = 0 #does runtime pruning of permutations - feature broken
     Conf.mem_configs[k].cfg.abs = 10.0 #the absolute tolerance, has no affect
-    Conf.mem_configs[k].cfg.rel = 0.02 #the relative tolerance, manually implemented
+    Conf.mem_configs[k].cfg.rel = 0.01 #the relative tolerance, manually implemented
     Conf.mem_configs[k].cfg.two_stage = 1 #two_stage integration
     print "mem_configs[",k,"].cfg.rel = ",Conf.mem_configs[k].cfg.rel
 
@@ -18,8 +18,8 @@ Conf.general["passall"] = False
 Conf.general["systematics"] = ["nominal"]
 Conf.leptons["selection"] = lambda event: event.is_fh 
 Conf.mem["selection"] = lambda event: (event.is_fh 
-                                       and event.cat in ["cat7","cat8","cat9","cat10","cat11"]
-                                       #and event.cat in ["cat8"]
+                                       #and event.cat in ["cat7","cat8","cat9","cat10","cat11"]
+                                       and event.cat in ["cat8"]
                                        #and event.btag_LR_4b_2b > 0.95
                                        )
 Conf.jets["untaggedSelection"] = "btagCSV" #or "btagLR"

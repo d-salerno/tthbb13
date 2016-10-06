@@ -23,12 +23,10 @@ We use rootpy in the code, which is installed on the T3 locally in `~jpata/rootp
 ## Step1: VHBB code
 This will start with MiniAOD and produce a VHBB ntuple.
 
-In order to run a quick test of the code, use the following makefile
+In order to run a quick test of the code, use the following testfile
 ~~~
-$ make test_VHBB
-# this will call VHbbAnalysis/Heppy/test/vhbb_combined.py
-$ make test_VHBB_data
-# this will call VHbbAnalysis/Heppy/test/vhbb_combined_data.py
+$ python tests.py
+# need to adjust which test this actual runs. MEAnalysis/python/test_MEAnalysis_heppy.py is good
 ~~~
 
 Submission will proceed via `crab3`, explained in Step1+2.

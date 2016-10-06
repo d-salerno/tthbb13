@@ -5,9 +5,9 @@ import logging
 import ROOT
 
 class MEAnalysisTestCase(unittest.TestCase):
-    testfiles = [
-        ("/store/user/jpata/tth/tth_Jul31_V24_v1/ttHTobb_M125_13TeV_powheg_pythia8/tth_Jul31_V24_v1/160731_130548/0000/tree_1.root", "tth"),
-        ("/store/user/jpata/tth/Aug11_leptonic_nome_v1/TT_TuneCUETP8M1_13TeV-powheg-pythia8/Aug11_leptonic_nome_v1/160811_212409/0000/tree_1.root", "ttjets")
+    testfiles = [                                 #actual file name is set in samples_local.py
+        ("/store/user/jpata/tth/Sep13_testing_v1/ttHTobb_M125_13TeV_powheg_pythia8/Sep13_testing_v1/160913_124802/0000/tree_14.root", "tth"),
+        #("/store/user/jpata/tth/Aug11_leptonic_nome_v1/TT_TuneCUETP8M1_13TeV-powheg-pythia8/Aug11_leptonic_nome_v1/160811_212409/0000/tree_1.root", "ttjets")
     ]
     
     def launch_test_MEAnalysis(self, infile, sample):
@@ -16,7 +16,7 @@ class MEAnalysisTestCase(unittest.TestCase):
         env["ME_CONF"] = os.path.join(CMSSW_BASE, "src/TTH/MEAnalysis/python/cfg_local.py")
         env["INPUT_FILE"] = infile
         env["TTH_SAMPLE"] = sample
-        outdir = "Loop_{0}".format(sample)
+        outdir = "Loop_2_{0}".format(sample) #if this is anything but Loop_{0} the looper will number them Loop_sample_X, otherwise it requires no existing directory
         if os.path.isdir(outdir):
             raise Exception("output directory exists: {0}".format(outdir))
 
