@@ -3,8 +3,8 @@
 Simple test runner for the workflow scripts.
 """
 
-from TTH.Plotting.test_sparsinator import *
-from TTH.Plotting.test_MakeCategory import *
+#from TTH.Plotting.test_sparsinator import *
+#from TTH.Plotting.test_MakeCategory import *
 from TTH.MEAnalysis.test_MEAnalysis_heppy import *
 
 if __name__ == "__main__":
