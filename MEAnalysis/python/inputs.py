@@ -346,5 +346,60 @@ sparse_data = {
         systematics = [
         ]
     ),
+    "Nov2": SparseHistogram( #DS
+        infile = "file:/mnt/t3nfs01/data01/shome/dsalerno/TTH_2016/TTH_80X_test2/CMSSW_8_0_19/src/TTH/MEAnalysis/gc/sparseFH_Nov2.root",
+
+        # gc:count.conf + hadd + getCounts    
+        ngen = {   
+            'QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8': 53581660.0, 
+            'QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8': 63252720.0, 
+            'QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8': 45372024.0,
+            'QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8': 10335975.0, 
+            'QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8': 7794463.0, 
+            'QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8': 3940098.0,
+            'TT_TuneCUETP8M1_13TeV-powheg-pythia8': 92647736.0, 
+            'ttHToNonbb_M125_13TeV_powheg_pythia8': 69298.0, 
+            'ttHTobb_M125_13TeV_powheg_pythia8': 3912212.0, #DS not sure
+        },
+        # Calculate via calcLumis.py
+        lumi = {
+            'SingleMuon': 4884.125,
+            'SingleElectron': 1243.151,
+            'MuonEG': 12408.951,
+            'DoubleEG': 6612.721,
+            'DoubleMuon': 12793.602,
+            'BTagCSV': 1162.172,
+        },
+        blr_cuts = {
+            "sl_j4_t2": 20,
+            "sl_j4_t3": 1.1,
+            "sl_j4_tge4": -20,
+            
+            "sl_j5_t2": 20,
+            "sl_j5_t3": 2.3,
+            "sl_j5_tge4": -20,
+            
+            "sl_jge6_t2": -0.4,
+            "sl_jge6_t3": 2.9,
+            "sl_jge6_tge4": -20,
+
+            "dl_j3_t2": 20,
+            "dl_j3_t3": -20,
+            "dl_jge4_t2": 20,
+            "dl_jge4_t3": 2.3,
+            "dl_jge4_tge4": -20,
+
+            "fh_j9_t4": -20,
+            "fh_j8_t3": -20,
+            "fh_j8_t4": -20,
+            "fh_j7_t4": -20,
+            "fh_j7_t3": -20,
+            "fh_jge6_t4": -20,
+            "fh_jge6_t3": -20,
+        },
+        systematics = [
+        ]
+    ),
+
 }
 

@@ -179,6 +179,7 @@ class MEAnalyzer(FilterAnalyzer):
     Produces:
     mem_results_tth (MEMOutput): probability for the tt+H(bb) hypothesis
     mem_results_ttbb (MEMOutput): probability for the tt+bb hypothesis
+    mem_results_qcd (MEMOutput): probability for the qcd hypothesis #DS
 
     """
     def __init__(self, cfg_ana, cfg_comp, looperName):
@@ -200,7 +201,7 @@ class MEAnalyzer(FilterAnalyzer):
         #cfg.configure_btag_pdf(self.conf)
         cfg.configure_transfer_function(self.conf)
         self.integrator = MEM.Integrand(
-            MEM.output, #verbosity level
+            MEM.output + MEM.init, #verbosity level
             cfg.cfg
         )
 
@@ -291,7 +292,7 @@ class MEAnalyzer(FilterAnalyzer):
                 event.systResults[syst].passes_mem = False
                 #fill outputs that need to be there, in case event was skipped
                 for key in self.conf.mem["methodsToRun"]:
-                    for hypo in ["tth", "ttbb"]:
+                    for hypo in ["tth", "ttbb", "qcd"]:  #DS
                         k = "mem_{0}_{1}".format(hypo, key)
                         if not event.systResults.has_key(k):
                             setattr(event.systResults[syst], k, MEM.MEMOutput())
@@ -343,6 +344,7 @@ class MEAnalyzer(FilterAnalyzer):
                 "mem_cfg": confname,
                 "p_tth": event.mem_results_tth[memidx].p,
                 "p_ttbb": event.mem_results_ttbb[memidx].p,
+                "p_qcd": event.mem_results_qcd[memidx].p, #DS
                 "p": event.mem_results_tth[memidx].p / (
                     event.mem_results_tth[memidx].p + self.conf.mem["weight"]*event.mem_results_ttbb[memidx].p
                 ) if event.mem_results_tth[memidx].p > 0 else 0.0
@@ -369,6 +371,7 @@ class MEAnalyzer(FilterAnalyzer):
         #Initialize members for tree filler
         event.mem_results_tth = []
         event.mem_results_ttbb = []
+        event.mem_results_qcd = [] #DS
 
         res = {}
         
@@ -382,7 +385,7 @@ class MEAnalyzer(FilterAnalyzer):
                 getattr(event, "systematic", None),
             )
 
-        for hypo in [MEM.Hypothesis.TTH, MEM.Hypothesis.TTBB]:
+        for hypo in [MEM.Hypothesis.TTH, MEM.Hypothesis.TTBB, MEM.Hypothesis.QCD]: #DS
             skipped = []
             for confname in self.memkeysToRun:
                 mem_cfg = self.conf.mem_configs[confname]
@@ -454,7 +457,8 @@ class MEAnalyzer(FilterAnalyzer):
         for key in self.memkeysToRun:
             for (hypo_name, hypo) in [
                 ("tth", MEM.Hypothesis.TTH),
-                ("ttbb", MEM.Hypothesis.TTBB)
+                ("ttbb", MEM.Hypothesis.TTBB),
+                ("qcd", MEM.Hypothesis.QCD) #DS
             ]:
                 mem_res = res[(hypo, key)]
                 setattr(event, "mem_{0}_{1}".format(hypo_name, key), mem_res)
