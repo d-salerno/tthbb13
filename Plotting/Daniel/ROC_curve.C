@@ -1,17 +1,17 @@
-#define SAVEPLOTS 1
+#define SAVEPLOTS 0
 #define CAT 11
 #define CUT_HT 500.0
-#define PSB_FAC 0.02 // 2j:4.0e5  3j:1.0e4  4j:5.0e4
+#define PSB_FAC "0.02" // 2j:4.0e5  3j:1.0e4  4j:5.0e4
 #define QCD 0
 #define MULTIINT 1
 
 void ROC_curve(){
   
-  const int abins = 100; //1000;
-  const int bbins = 50; //10000;
-  const int cbins = 20; //1000;
+  const int abins = 100; //1000; //100
+  const int bbins = 50; //10000; //50
+  const int cbins = 20; //1000; //20
   float a = 0.0001;
-  float b = 0.9; //0.99999;
+  float b = 0.9; //0.99999; //0.9
 
   const int nbins = abins+bbins+cbins;
   float xbins[nbins+1] = {0};
@@ -23,15 +23,15 @@ void ROC_curve(){
   }
   cout << endl;
 
-  string version = "FHwithme_2pcrel_1"; //"test_3jqcdmem_1";  
+  string version = "FHwithme_2pcrel_v2"; //"test_4bqcdmem"; //"FHwithme_2pcrel_1"; //"test_3jqcdmem_1";  
 
   string tag = "_"; //"_Psb0pt55";
   tag += version;
   string method = "";
   if(CUT_HT>0) tag += Form("_HT%.0f",CUT_HT);  
   if(CAT<0) tag += "_catAll";
-  else tag += Form("_cat%d",CAT);
-  tag += Form("_%.3f",PSB_FAC);
+  else tag += Form("_cat%d_",CAT);
+  tag += PSB_FAC;
 
   string folder = "/mnt/t3nfs01/data01/shome/dsalerno/TTH_2016/TTH_80X_test2/projectSkimFH/"+version+"/";
 
@@ -87,15 +87,26 @@ void ROC_curve(){
   if(CAT>=0) tag += method;
 
   // QCD scale factors (xsec/nGen) - scales to 1 pb-1
-  // for FHwithme_2pcrel_1
-  double scalefacQCD20 = 25.25 / 3940098.0 ;
-  double scalefacQCD10 = 1206.0 / 10335975.0 ;
-  double scalefacQCD15 = 120.4 / 7794463.0 ;
-  double scalefacQCD3 = 351300.0 / 53581660.0 ;
-  double scalefacttH = 0.5085*0.577 / 69298.0 ;
-  double scalefacQCD7 = 6802.0 / 45372024.0 ;
-  double scalefacTTbar = 831.76 / 92647736.0 ;
-  double scalefacQCD5 = 31630.0 / 63252720.0 ;
+
+  // for FHwithme_2pcrel_v2 (T3 tthbb13 only jobs) * factor of nGen/nvhbb
+  double scalefacTTbar = 831.76 / 9813293.0 * 1.03196;
+  double scalefacQCD3 = 351300.0 / 51335224.0 * 1.00401;
+  double scalefacQCD7 = 6802.0 / 40961712.0 * 1.00041;
+  double scalefacQCD15 = 120.4 / 4654033.0 * 1.00014;
+  double scalefacttH = 0.5085*0.577 / 69151.0 * 1.00213;
+  double scalefacQCD10 = 1206.0 / 8025059.0 * 1.00026;
+  double scalefacQCD20 = 25.25 / 2368489.0 * 1.00009;
+  double scalefacQCD5 = 31630.0 / 60186528.0 * 1.00067;
+
+  // // for FHwithme_2pcrel_1
+  // double scalefacQCD20 = 25.25 / 3940098.0 ;
+  // double scalefacQCD10 = 1206.0 / 10335975.0 ;
+  // double scalefacQCD15 = 120.4 / 7794463.0 ;
+  // double scalefacQCD3 = 351300.0 / 53581660.0 ;
+  // double scalefacttH = 0.5085*0.577 / 69298.0 ;
+  // double scalefacQCD7 = 6802.0 / 45372024.0 ;
+  // double scalefacTTbar = 831.76 / 92647736.0 ;
+  // double scalefacQCD5 = 31630.0 / 63252720.0 ;
 
   // // for test_2jqcdmem_1
   // double scalefacQCD15 = 120.4 / 96591.0 ;
@@ -162,6 +173,10 @@ void ROC_curve(){
   httj4q1b  = (TH1F*)h1->Clone("httj4q1b");
   hqcd4q1b  = (TH1F*)h1->Clone("hqcd4q1b");
 
+  hsignal1q1b = (TH1F*)h1->Clone("hsignal1q1b");
+  httj1q1b  = (TH1F*)h1->Clone("httj1q1b");
+  hqcd1q1b  = (TH1F*)h1->Clone("hqcd1q1b");
+
   string me = "(ht>";
   me += Form("%.0f",CUT_HT);
   me += " && ";
@@ -169,15 +184,17 @@ void ROC_curve(){
   //me += " && HLT_ttH_FH>0";
   me += ")";
 
-  string oneq="_3w2h2t"; string fourq="_0w0w2h2t"; string fqob="_0w0w2h1t"; 
+  //string oneq="_3w2h2t"; string fourq="_0w0w2h2t"; string fqob="_0w0w2h1t";
+  string oneq="_3w2h2t"; string fourq="_0w2w2h2t"; string fqob="_1w1w2h2t"; string oqob="_3w2h1t";
 
   TString draw = "";
-  if(QCD==0) draw = ("mem_tth_FH"+method+"_p/(mem_tth_FH"+method+"_p+"+Form("%.3f",PSB_FAC)+"*mem_ttbb_FH"+method+"_p)").c_str();
-  if(QCD==1) draw = ("mem_tth_FH"+method+"_p/(mem_tth_FH"+method+"_p+"+Form("%.3f",PSB_FAC)+"*mem_qcd_FH"+method+"_p)").c_str();
+  if(QCD==0) draw = ("mem_tth_FH"+method+"_p/(mem_tth_FH"+method+"_p+"+PSB_FAC+"*mem_ttbb_FH"+method+"_p)").c_str();
+  if(QCD==1) draw = ("mem_tth_FH"+method+"_p/(mem_tth_FH"+method+"_p+"+PSB_FAC+"*mem_qcd_FH"+method+"_p)").c_str();
 
-  TString draw1q = ("mem_tth_FH"+oneq+"_p/(mem_tth_FH"+oneq+"_p+"+Form("%.3f",PSB_FAC)+"*mem_ttbb_FH"+oneq+"_p)").c_str();
-  TString draw4q = ("mem_tth_FH"+fourq+"_p/(mem_tth_FH"+fourq+"_p+"+Form("%.3f",PSB_FAC)+"*mem_ttbb_FH"+fourq+"_p)").c_str();
-  TString draw4q1b =("mem_tth_FH"+fqob+"_p/(mem_tth_FH"+fqob+"_p+"+Form("%.3f",PSB_FAC)+"*mem_ttbb_FH"+fqob+"_p)").c_str();
+  TString draw1q = ("mem_tth_FH"+oneq+"_p/(mem_tth_FH"+oneq+"_p+"+PSB_FAC+"*mem_ttbb_FH"+oneq+"_p)").c_str();
+  TString draw4q = ("mem_tth_FH"+fourq+"_p/(mem_tth_FH"+fourq+"_p+"+PSB_FAC+"*mem_ttbb_FH"+fourq+"_p)").c_str();
+  TString draw4q1b =("mem_tth_FH"+fqob+"_p/(mem_tth_FH"+fqob+"_p+"+PSB_FAC+"*mem_ttbb_FH"+fqob+"_p)").c_str();
+  TString draw1q1b =("mem_tth_FH"+oqob+"_p/(mem_tth_FH"+oqob+"_p+"+PSB_FAC+"*mem_ttbb_FH"+oqob+"_p)").c_str();
   TString cut = me.c_str();
   TString weight = "1.0"; //"weight_xs";
 
@@ -247,6 +264,21 @@ void ROC_curve(){
     hqcd4q1b->Add(hqcd10,scalefacQCD10);
     hqcd4q1b->Add(hqcd15,scalefacQCD15);
     hqcd4q1b->Add(hqcd20,scalefacQCD20);
+
+    tsignal->Draw(draw1q1b+">>hsignal1q1b",cut);
+    tttj->Draw(draw1q1b+">>httj1q1b",cut);
+    tqcd3 ->Draw(draw1q1b+">>hqcd3",cut+"*"+weight);
+    tqcd5 ->Draw(draw1q1b+">>hqcd5",cut+"*"+weight);
+    tqcd7 ->Draw(draw1q1b+">>hqcd7",cut+"*"+weight);
+    tqcd10->Draw(draw1q1b+">>hqcd10",cut+"*"+weight);
+    tqcd15->Draw(draw1q1b+">>hqcd15",cut+"*"+weight);
+    tqcd20->Draw(draw1q1b+">>hqcd20",cut+"*"+weight);
+  
+    hqcd1q1b->Add(hqcd5,scalefacQCD5); 
+    hqcd1q1b->Add(hqcd7,scalefacQCD7);
+    hqcd1q1b->Add(hqcd10,scalefacQCD10);
+    hqcd1q1b->Add(hqcd15,scalefacQCD15);
+    hqcd1q1b->Add(hqcd20,scalefacQCD20);
   }  
 
   //GET COUNTS
@@ -257,6 +289,7 @@ void ROC_curve(){
   float totalsignal1q, totalttj1q, totalqcd1q;
   float totalsignal4q, totalttj4q,  totalqcd4q;
   float totalsignal4q1b, totalttj4q1b, totalqcd4q1b;
+  float totalsignal1q1b, totalttj1q1b, totalqcd1q1b;
 
   if(MULTIINT){
     totalsignal1q = hsignal1q->Integral();
@@ -270,6 +303,10 @@ void ROC_curve(){
     totalsignal4q1b = hsignal4q1b->Integral();
     totalttj4q1b = httj4q1b->Integral();
     totalqcd4q1b = hqcd4q1b->Integral();
+
+    totalsignal1q1b = hsignal1q1b->Integral();
+    totalttj1q1b = httj1q1b->Integral();
+    totalqcd1q1b = hqcd1q1b->Integral();
   }
 
   //DECLARE COUNT VARIABLES
@@ -289,6 +326,10 @@ void ROC_curve(){
   float nttj4q1b = 0.0;
   float nqcd4q1b = 0.0;
 
+  float nsignal1q1b = 0.0;
+  float nttj1q1b = 0.0;
+  float nqcd1q1b = 0.0;
+
   //DECLARE EFFICIENCY VARIABLES
   vector<float> esignal;
   vector<float> ettj;
@@ -305,6 +346,10 @@ void ROC_curve(){
   vector<float> esignal4q1b;
   vector<float> ettj4q1b;
   vector<float> eqcd4q1b;
+
+  vector<float> esignal1q1b;
+  vector<float> ettj1q1b;
+  vector<float> eqcd1q1b;
 
   //FILL EFFICIENCY VARIABLES
   for(int i=0; i<nbins; i++){
@@ -341,6 +386,14 @@ void ROC_curve(){
       esignal4q1b.push_back( 1.0-nsignal4q1b/totalsignal4q1b );
       ettj4q1b.push_back( 1.0-nttj4q1b/totalttj4q1b );
       eqcd4q1b.push_back( 1.0-nqcd4q1b/totalqcd4q1b );
+
+      nsignal1q1b += hsignal1q1b->GetBinContent(i);
+      nttj1q1b += httj1q1b->GetBinContent(i);
+      nqcd1q1b += hqcd1q1b->GetBinContent(i);
+    
+      esignal1q1b.push_back( 1.0-nsignal1q1b/totalsignal1q1b );
+      ettj1q1b.push_back( 1.0-nttj1q1b/totalttj1q1b );
+      eqcd1q1b.push_back( 1.0-nqcd1q1b/totalqcd1q1b );
     }
   }
 
@@ -359,6 +412,9 @@ void ROC_curve(){
   TGraph* gttj4q1b = new TGraph(nbins);
   TGraph* gqcd4q1b = new TGraph(nbins);
 
+  TGraph* gttj1q1b = new TGraph(nbins);
+  TGraph* gqcd1q1b = new TGraph(nbins);
+
   //FILL GRAPHS
   cout << "esignal.size() " << esignal.size() << endl;
   cout << "i esignal ettj eqcd" << endl;
@@ -372,6 +428,8 @@ void ROC_curve(){
       gqcd4q->SetPoint(i, esignal4q[i], eqcd4q[i]);
       gttj4q1b->SetPoint(i, esignal4q1b[i], ettj4q1b[i]);
       gqcd4q1b->SetPoint(i, esignal4q1b[i], eqcd4q1b[i]);
+      gttj1q1b->SetPoint(i, esignal1q1b[i], ettj1q1b[i]);
+      gqcd1q1b->SetPoint(i, esignal1q1b[i], eqcd1q1b[i]);
     }
     if(i<11 || (i>abins && i<abins+11 ) || (i>(abins+bbins) && i<(abins+bbins+11)) ) cout << i << " " << esignal[i] << " " << ettj[i] << " " << eqcd[i] << endl;
   }
@@ -435,8 +493,19 @@ void ROC_curve(){
   gqcd4q1b->SetLineWidth(2);
   gqcd4q1b->SetMaximum(1.0);
 
+  gttj1q1b->SetLineColor(kRed);
+  gttj1q1b->SetLineStyle(7);
+  gttj1q1b->SetLineWidth(2);
+  gttj1q1b->SetMaximum(1.0);
+
+  gqcd1q1b->SetLineColor(kGreen+3);
+  gqcd1q1b->SetLineStyle(7);
+  gqcd1q1b->SetLineWidth(2);
+  gqcd1q1b->SetMaximum(1.0);
+
+
   if(MULTIINT){
-    if(CAT==8){
+    if(CAT==8 || CAT==9){
       gttj1q->Draw("LSAME");
       leg->AddEntry(gttj1q, "ttH vs tt+jets (int. 1q)", "L");
       gqcd1q->Draw("LSAME");
@@ -444,15 +513,24 @@ void ROC_curve(){
     }
     if(CAT==8 || CAT==7 || CAT==9){
       gttj4q->Draw("LSAME");
-      leg->AddEntry(gttj4q, "ttH vs tt+jets (int. 4q)", "L");
+      //leg->AddEntry(gttj4q, "ttH vs tt+jets (int. 4q)", "L");
+      leg->AddEntry(gttj4q, "ttH vs tt+jets (int. 1W)", "L");
       gqcd4q->Draw("LSAME");
-      leg->AddEntry(gqcd4q, "ttH vs QCD (int. 4q)", "L");
-    }
-    if(CAT==8 || CAT==7 || CAT==9 || CAT==10 || CAT==11){
+      //leg->AddEntry(gqcd4q, "ttH vs QCD (int. 4q)", "L");
+      leg->AddEntry(gqcd4q, "ttH vs QCD (int. 1W)", "L");
+      
       gttj4q1b->Draw("LSAME");
-      leg->AddEntry(gttj4q1b, "ttH vs tt+jets (int. 4q,1b)", "L");
+      leg->AddEntry(gttj4q1b, "ttH vs tt+jets (int. 2q)", "L");
       gqcd4q1b->Draw("LSAME");
-      leg->AddEntry(gqcd4q1b, "ttH vs QCD (int. 4q,1b)", "L");
+      leg->AddEntry(gqcd4q1b, "ttH vs QCD (int. 2q)", "L");
+    }
+    if(CAT==10 || CAT==11){
+      gttj1q1b->Draw("LSAME");
+      //leg->AddEntry(gttj4q1b, "ttH vs tt+jets (int. 4q,1b)", "L");
+      leg->AddEntry(gttj1q1b, "ttH vs tt+jets (int. 1q,1b)", "L");
+      gqcd1q1b->Draw("LSAME");
+      //leg->AddEntry(gqcd4q1b, "ttH vs QCD (int. 4q,1b)", "L");
+      leg->AddEntry(gqcd1q1b, "ttH vs QCD (int. 1q,1b)", "L");
     }
   }
   

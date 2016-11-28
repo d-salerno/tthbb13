@@ -305,7 +305,7 @@ def main():
 
         #Configure the number of events to run
         from PhysicsTools.HeppyCore.framework.looper import Looper
-        nEvents = 200
+        nEvents = 1000 #17000*60
 
         kwargs = {}
         if conf.general.get("eventWhitelist", None) is None:
@@ -315,11 +315,22 @@ def main():
             'Loop_'+samp.name,
             config,
             nPrint = 0,
+            memCheckFromEvent = True, #DS
             **kwargs
         )
+        
+        # print mem config before loop
+        # print " mem config before loop"
+        # for k, v in Conf.mem_configs.items():
+        #     print "mem_configs[",k,"].cfg.two_stage = ",Conf.mem_configs[k].cfg.two_stage
 
         #execute the code
         looper.loop()
+
+        # print mem config after loop
+        # print " mem config after loop"
+        # for k, v in Conf.mem_configs.items():
+        #     print "mem_configs[",k,"].cfg.two_stage = ",Conf.mem_configs[k].cfg.two_stage
 
         tf = looper.setup.services["outputfile"].file 
         tf.cd()

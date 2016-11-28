@@ -3,11 +3,12 @@
 #define RATIO 0
 #define NORMALIZE 1
 #define POISSON 0
-#define SAVEPLOTS 1
-#define CAT 8  // 7, 8, 9, 10, 11 or <0 for all
-#define METHOD 11 // 11=4w2h2t, 12=3w2h2t, 13=4w2h1t, 14=0w0w2h2t, 15=0w0w2h1t
+#define SAVEPLOTS 0
+#define CAT 11  // 7, 8, 9, 10, 11 or <0 for all
+//#define METHOD 11 // 11=4w2h2t, 12=3w2h2t, 13=4w2h1t, 14=0w0w2h2t, 15=0w0w2h1t
+#define METHOD 14 // 11=4w2h2t, 12=3w2h2t, 13=4w2h1t, 14=3w2h1t, 15=0w2w2h2t, 16=1w1w2h2t
 #define CUT_HT 500.0
-#define PSB_FAC 0.02 // 2j:4.0e5  3j:1.0e4  4j:5.0e4
+#define PSB_FAC "0.02" //"2.0e-10" // 2j:4.0e5  3j:1.0e4  4j:5.0e4
 #define QCD 0
 #define LUMI 30.0
 #define TTSPLIT 1
@@ -29,7 +30,7 @@ void Discriminant(){
   float xmin  = 0.0;
   float xmax  = 1.0;
 
-  string version = "FHwithme_2pcrel_1"; //"test_4jqcdmem_1";
+  string version = "FHwithme_2pcrel_v2"; //"test_4bqcdmem"; //"FHwithme_2pcrel_1"; //"test_4jqcdmem_1";
 
   string folder = "/mnt/t3nfs01/data01/shome/dsalerno/TTH_2016/TTH_80X_test2/projectSkimFH/"+version+"/";
 
@@ -40,9 +41,9 @@ void Discriminant(){
   tag += version;
   string method = "";
   if(CUT_HT>0) tag += Form("_HT%.0f",CUT_HT);  
-  if(CAT<0) tag += "_catAll";
-  else tag += Form("_cat%d",CAT);
-  tag += Form("_%.3f",PSB_FAC);
+  if(CAT<0) tag += "_catAll_";
+  else tag += Form("_cat%d_",CAT);
+  tag += PSB_FAC;
   if(TTSPLIT) tag += "_ttsplit";
   if(RUNONDATA) tag += "_data";
   if(LOGSCALE)  tag += "_log";
@@ -74,8 +75,9 @@ void Discriminant(){
   if(METHOD==11) {method = "_4w2h2t"; element="11";}
   else if(METHOD==12) {method = "_3w2h2t";  element="12";}
   else if(METHOD==13) {method = "_4w2h1t";  element="13";}
-  else if(METHOD==14) {method = "_0w0w2h2t";  element="14";}
-  else if(METHOD==15) {method = "_0w0w2h1t";  element="15";}
+  else if(METHOD==14) {method = "_3w2h1t";  element="14";}
+  else if(METHOD==15) {method = "_0w2w2h2t";  element="15";}
+  else if(METHOD==16) {method = "_1w1w2h2t";  element="16";}
 
   if(CAT==7){
     cat = "cat==7 && nBCSVM>=4";
@@ -100,15 +102,36 @@ void Discriminant(){
   if(CAT>=0) tag += method;
   
   // QCD scale factors (xsec/nGen) - scales to 1 pb-1
-  // for FHwithme_2pcrel_1
-  double scalefacQCD20 = 25.25 / 3940098.0 ;
-  double scalefacQCD10 = 1206.0 / 10335975.0 ;
-  double scalefacQCD15 = 120.4 / 7794463.0 ;
-  double scalefacQCD3 = 351300.0 / 53581660.0 ;
-  double scalefacttH = 0.5085*0.577 / 69298.0 ;
-  double scalefacQCD7 = 6802.0 / 45372024.0 ;
-  double scalefacTTbar = 831.76 / 92647736.0 ;
-  double scalefacQCD5 = 31630.0 / 63252720.0 ;
+
+  // for FHwithme_2pcrel_v2 (T3 tthbb13 only jobs) * factor of nGen/nvhbb
+  double scalefacTTbar = 831.76 / 9813293.0 * 1.03196;
+  double scalefacQCD3 = 351300.0 / 51335224.0 * 1.00401;
+  double scalefacQCD7 = 6802.0 / 40961712.0 * 1.00041;
+  double scalefacQCD15 = 120.4 / 4654033.0 * 1.00014;
+  double scalefacttH = 0.5085*0.577 / 69151.0 * 1.00213;
+  double scalefacQCD10 = 1206.0 / 8025059.0 * 1.00026;
+  double scalefacQCD20 = 25.25 / 2368489.0 * 1.00009;
+  double scalefacQCD5 = 31630.0 / 60186528.0 * 1.00067;
+
+  // // for test_4bqcdmem
+  // double scalefacQCD10 = 1206.0 / 1993932.0 ;
+  // double scalefacQCD5 = 31630.0 / 14673435.0 ;
+  // double scalefacQCD15 = 120.4 / 954534.0 ;
+  // double scalefacQCD7 = 6802.0 / 7944786.0 ;
+  // double scalefacQCD3 = 351300.0 / 7263155.0 ;
+  // double scalefacQCD20 = 25.25 / 938701.0 ;
+  // double scalefacttH = 0.5085*0.577 / 976532.0 ;
+  // double scalefacTTbar = 831.76 / 8640400.0;
+
+  // // for FHwithme_2pcrel_1
+  // double scalefacQCD20 = 25.25 / 3940098.0 ;
+  // double scalefacQCD10 = 1206.0 / 10335975.0 ;
+  // double scalefacQCD15 = 120.4 / 7794463.0 ;
+  // double scalefacQCD3 = 351300.0 / 53581660.0 ;
+  // double scalefacttH = 0.5085*0.577 / 69298.0 ;
+  // double scalefacQCD7 = 6802.0 / 45372024.0 ;
+  // double scalefacTTbar = 831.76 / 92647736.0 ;
+  // double scalefacQCD5 = 31630.0 / 63252720.0 ;
 
   // // for test_2jqcdmem_1
   // double scalefacQCD15 = 120.4 / 96591.0 ;
@@ -208,8 +231,8 @@ void Discriminant(){
   selection += ")";
 
   TString draw = "";
-  if(QCD==0) draw = ("mem_tth_FH"+method+"_p/(mem_tth_FH"+method+"_p+"+Form("%.3f",PSB_FAC)+"*mem_ttbb_FH"+method+"_p)").c_str();
-  if(QCD==1) draw = ("mem_tth_FH"+method+"_p/(mem_tth_FH"+method+"_p+"+Form("%.3f",PSB_FAC)+"*mem_qcd_FH"+method+"_p)").c_str();
+  if(QCD==0) draw = ("mem_tth_FH"+method+"_p/(mem_tth_FH"+method+"_p+"+PSB_FAC+"*mem_ttbb_FH"+method+"_p)").c_str();
+  if(QCD==1) draw = ("mem_tth_FH"+method+"_p/(mem_tth_FH"+method+"_p+"+PSB_FAC+"*mem_qcd_FH"+method+"_p)").c_str();
   //TString draw = "1.0*numJets/(2.0*numJets)";
   TString cut = selection.c_str();
   TString ttbbcut = ttbbsel.c_str();
@@ -619,7 +642,8 @@ void Discriminant(){
 
     hqcd ->GetYaxis()->SetTitle("Normalized units");
     hqcd ->SetMinimum( 0.0 );
-    hqcd ->SetMaximum( hqcd->GetMaximum()*1.45 );   //CHANGE HERE
+    float normmax = TMath::Max( hqcd->GetMaximum(), htth->GetMaximum()*hqcd->Integral()/htth->Integral() );
+    hqcd ->SetMaximum( normmax*1.2 );   //CHANGE HERE
     hqcd ->DrawNormalized("PE");
     if(TTSPLIT){
       httbb->DrawNormalized("PESAME");

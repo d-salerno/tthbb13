@@ -23,21 +23,30 @@ def main(filenames, ofname):
             continue
         print "good file", infn, tf
         good_filenames += [infn]
-        vhbb_dir = tf.Get("vhbb")
-        for k in vhbb_dir.GetListOfKeys():
-            kn = k.GetName()
-            if "Count" in kn:
-                o = k.ReadObj()
-                if not count_dict.has_key(kn):
-                    count_dict[kn] = 0
-                count_dict[kn] += o.GetBinContent(1)
-                print "Entries", kn, o.GetBinContent(1)
-                if not of.Get(kn):
-                    print "first file, creating histogram", kn
-                    o2 = o.Clone()
-                    of.Add(o2)
-                else:
-                    of.Get(kn).Add(o)
+        count_vhbb = tf.Get("CounterAnalyzer_count") #DS
+        print "Entries CounterAnalyzer_count", count_vhbb.GetBinContent(1)
+        if not of.Get("CounterAnalyzer_count"):
+            print "first file, creating histogram", count_vhbb.GetName() 
+            o2 = count_vhbb.Clone()
+            of.Add(o2)
+        else:
+            of.Get("CounterAnalyzer_count").Add(count_vhbb)
+        if tf.Get("vhbb"):                           #DS ^^^
+            vhbb_dir = tf.Get("vhbb")
+            for k in vhbb_dir.GetListOfKeys():
+                kn = k.GetName()
+                if "Count" in kn:
+                    o = k.ReadObj()
+                    if not count_dict.has_key(kn):
+                        count_dict[kn] = 0
+                    count_dict[kn] += o.GetBinContent(1)
+                    print "Entries", kn, o.GetBinContent(1)
+                    if not of.Get(kn):
+                        print "first file, creating histogram", kn
+                        o2 = o.Clone()
+                        of.Add(o2)
+                    else:
+                        of.Get(kn).Add(o)
         of.Write()
         tf.Close()
     

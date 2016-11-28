@@ -6,7 +6,7 @@ from ROOT import TH1F, TCanvas, TFile, TObject
 samples = ["QCD300","QCD300x","QCD500","QCD500x","QCD700","QCD700x","QCD1000","QCD1500","QCD2000","TTbar","ttHbb","ttHNon"]
 copy = 0
 extract = 0
-analyse = 1
+analyse = 0
 report = 1
 
 #se = "root://storage01.lcg.cscs.ch/pnfs/lcg.cscs.ch/cms/trivcat//store/user/dsalerno"
@@ -24,22 +24,35 @@ path = {
     # "ttHbb":"tth/VHBBHeppyV21_tthbbV9_v3_3/ttHTobb_M125_13TeV_powheg_pythia8/VHBBHeppyV21_tthbbV9_v3_3/160518_110721",
     # "ttHNon":"tth/VHBBHeppyV21_tthbbV9_v3_3/ttHToNonbb_M125_13TeV_powheg_pythia8/VHBBHeppyV21_tthbbV9_v3_3/160518_110839",
 
-    "QCD300":"tth/FHwithme_2pcrel_1/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_115507",
-    "QCD300x":"tth/FHwithme_2pcrel_1/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_120322",
-    "QCD500":"tth/FHwithme_2pcrel_1/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_121140",
-    "QCD500x":"tth/FHwithme_2pcrel_1/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_120959",
-    "QCD700":"tth/FHwithme_2pcrel_1/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_120003",
-    "QCD700x":"tth/FHwithme_2pcrel_1/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_115645",
-    "QCD1000":"tth/FHwithme_2pcrel_1/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_120143",
-    "QCD1500":"tth/FHwithme_2pcrel_1/QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_121320",
-    "QCD2000":"tth/FHwithme_2pcrel_1/QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_120503",
-    "TTbar":"tth/FHwithme_2pcrel_1/TT_TuneCUETP8M1_13TeV-powheg-pythia8/FHwithme_2pcrel_1/161003_120820",
-    "ttHbb":"tth/FHwithme_2pcrel_1/ttHTobb_M125_13TeV_powheg_pythia8/FHwithme_2pcrel_1/161003_115824",
-    "ttHNon":"tth/FHwithme_2pcrel_1/ttHToNonbb_M125_13TeV_powheg_pythia8/FHwithme_2pcrel_1/161003_120642",
-    #"data":"",
+    # "QCD300":"tth/FHwithme_2pcrel_1/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_115507",
+    # "QCD300x":"tth/FHwithme_2pcrel_1/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_120322",
+    # "QCD500":"tth/FHwithme_2pcrel_1/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_121140",
+    # "QCD500x":"tth/FHwithme_2pcrel_1/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_120959",
+    # "QCD700":"tth/FHwithme_2pcrel_1/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_120003",
+    # "QCD700x":"tth/FHwithme_2pcrel_1/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_115645",
+    # "QCD1000":"tth/FHwithme_2pcrel_1/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_120143",
+    # "QCD1500":"tth/FHwithme_2pcrel_1/QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_121320",
+    # "QCD2000":"tth/FHwithme_2pcrel_1/QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/FHwithme_2pcrel_1/161003_120503",
+    # "TTbar":"tth/FHwithme_2pcrel_1/TT_TuneCUETP8M1_13TeV-powheg-pythia8/FHwithme_2pcrel_1/161003_120820",
+    # "ttHbb":"tth/FHwithme_2pcrel_1/ttHTobb_M125_13TeV_powheg_pythia8/FHwithme_2pcrel_1/161003_115824",
+    # "ttHNon":"tth/FHwithme_2pcrel_1/ttHToNonbb_M125_13TeV_powheg_pythia8/FHwithme_2pcrel_1/161003_120642",
+    # #"data":"",
+
+    "QCD300":"tth/test_4bqcdmem_2/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/test_4bqcdmem_2/161108_101839",
+    "QCD300x":"tth/test_4bqcdmem_2/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/test_4bqcdmem_2/161108_102330",
+    "QCD500":"tth/test_4bqcdmem_2/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/test_4bqcdmem_2/161108_102655",
+    "QCD500x":"tth/test_4bqcdmem_2/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/test_4bqcdmem_2/161108_102544",
+    "QCD700":"tth/test_4bqcdmem_2/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/test_4bqcdmem_2/161108_102100",
+    "QCD700x":"tth/test_4bqcdmem_2/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/test_4bqcdmem_2/161108_101949",
+    "QCD1000":"tth/test_4bqcdmem_2/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/test_4bqcdmem_2/161108_102222",
+    "QCD1500":"tth/test_4bqcdmem_2/QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/test_4bqcdmem_2/161108_102803",
+    "QCD2000":"tth/test_4bqcdmem_2/QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/test_4bqcdmem_2/161108_102439",
+    "TTbar":"tth/test_4bqcdmem_1/TT_TuneCUETP8M1_13TeV-powheg-pythia8/test_4bqcdmem_1/161108_093525",
+    "ttHbb":"tth/test_4bqcdmem_1/ttHTobb_M125_13TeV_powheg_pythia8/test_4bqcdmem_1/161108_092825",
+    "ttHNon":"tth/test_4bqcdmem_1/ttHToNonbb_M125_13TeV_powheg_pythia8/test_4bqcdmem_1/161108_093413",
 }
 
-endpath = "/scratch/dsalerno/tth/80x_test2/FHwithme_2pcrel_1/"
+endpath = "/scratch/dsalerno/tth/80x_test2/FHwithme_2pcrel_1/" #test_4bqcdmem_2/"    
 
 for sample in samples:
     print ""
@@ -49,6 +62,9 @@ for sample in samples:
         #listdir = "gfal-ls "+se+"/"+path[sample]
         listdir = "xrdfs "+se+" ls "+folder+"/"+path[sample]
         p = subprocess.Popen(listdir, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+        if not os.path.exists(destination):
+            os.makedirs(destination)
 
         for line in p.stdout.readlines():
             #directory = line.split()[0]
@@ -73,7 +89,7 @@ for sample in samples:
                     continue
                 #copylog = "gfal-copy "+se+"/"+path[sample]+"/"+directory+"/log/"+logfile+" file://"+destination
                 copylog = "xrdcp root://"+se+"/"+folder+"/"+path[sample]+"/"+directory+"/log/"+logfile+" /"+destination
-                #print copylog
+                print copylog
                 os.system(copylog)
 
     if( extract ):
@@ -100,7 +116,7 @@ for sample in samples:
         outf = TFile.Open(endpath+"/jobtime.root","UPDATE")
         outf.cd()
         htime_total = TH1F("htime_total","htime_total",100,0,50)
-        htime_vhbb  = TH1F("htime_vhbb" ,"htime_vhbb" ,100,0,10)
+        htime_vhbb  = TH1F("htime_vhbb" ,"htime_vhbb" ,100,0,20)
         htime_mem   = TH1F("htime_mem"  ,"htime_mem"  ,100,0,50)
 
         h_0_7_322   = TH1F("h_0_7_322","h_0_7_322",200,0,200)
@@ -312,6 +328,10 @@ for sample in samples:
         outf = TFile.Open(endpath+"/jobtime.root")
         outf.cd()
 
+        hvhbb   = outf.Get(sample+"/htime_vhbb")
+        hmem    = outf.Get(sample+"/htime_mem")
+        htotal  = outf.Get(sample+"/htime_total")
+
         hh_0_7_322   = outf.Get(sample+"/h_0_7_322")
         hh_0_7_022   = outf.Get(sample+"/h_0_7_022")
         hh_0_7_021   = outf.Get(sample+"/h_0_7_021")
@@ -398,3 +418,6 @@ for sample in samples:
         print "ttbb_hypo"
         print "421", hh_1_11_421.GetEntries(), hh_1_11_421.GetMean(), hh_1_11_421.GetStdDev()
         print "021", hh_1_11_021.GetEntries(), hh_1_11_021.GetMean(), hh_1_11_021.GetStdDev()
+
+        print "\nVHBB_mean stdev MEM_mean stdev Total_mean stdev"
+        print hvhbb.GetMean(), hvhbb.GetStdDev(), hmem.GetMean(), hmem.GetStdDev(), htotal.GetMean(), htotal.GetStdDev()

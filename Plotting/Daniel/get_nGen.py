@@ -11,8 +11,10 @@ import os, fnmatch
 for fname in os.listdir(sys.argv[1]):
     if(fname.find('.root')>0):
         file_ = ROOT.TFile(sys.argv[1]+"/"+fname)
-        count = file_.Get("Count")
-        half = fname.split("__")[1]
+        #count = file_.Get("Count")
+        count = file_.Get("CounterAnalyzer_count")
+        #half = fname.split("__")[1]
+        half = fname
         name = half.split(".")[0]
         #print name,count.GetBinContent(1)
 

@@ -5,8 +5,8 @@
 #define CAT 8  // 7, 8, 9, 10, 11 or <0 for all
 #define METHOD 11 // 11=4w2h2t, 12=3w2h2t, 13=4w2h1t, 14=0w0w2h2t, 15=0w0w2h1t
 #define CUT_HT 500.0
-#define QCD 0
-#define TTSPLIT 1
+#define QCD 1
+#define TTSPLIT 0
 
 #include <fstream>
 
@@ -15,16 +15,16 @@ void Probability(){
   TStopwatch* clock = new TStopwatch();
   clock->Start();
 
-  int nbins = 100;
+  int nbins = 120;
   float xmin  = -60.0;
-  float xmax  = -10.0;
+  float xmax  = 0.0;
 
   float xbins[nbins+1];
   for(i=0;i<=nbins;i++){
     xbins[i] = xmin + (xmax-xmin)/nbins * i;
   }
 
-  string version = "FHwithme_2pcrel_1"; //"test_4jqcdmem_1";
+  string version = "test_4bqcdmem"; //"FHwithme_2pcrel_1"; //"test_4jqcdmem_1";
 
   string folder = "/mnt/t3nfs01/data01/shome/dsalerno/TTH_2016/TTH_80X_test2/projectSkimFH/"+version+"/";
 

@@ -688,7 +688,7 @@ def getTreeProducer(conf):
                 ),
             })
             for hypo in conf.mem["methodsToRun"]:
-                for proc in ["tth", "ttbb", "qcd"]: #DS
+                for proc in ["tth", "ttbb"]: #, "qcd"]: #DS
                     name = "mem_{0}_{1}".format(proc, hypo) 
                     treeProducer.globalObjects.update({
                         name + syst_suffix: NTupleObject(

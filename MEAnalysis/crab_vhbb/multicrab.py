@@ -109,7 +109,7 @@ datasets.update({
     'ttHTobb': {
         "ds": '/ttHTobb_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM',
         "maxlumis": -1,
-        "perjob": 10,
+        "perjob": 5,
         "runtime": 40,
         "mem_cfg": me_cfgs["default"],
         "script": 'heppy_crab_script.sh'
@@ -117,7 +117,7 @@ datasets.update({
     'ttHToNonbb': {
         "ds": '/ttHToNonbb_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM',
         "maxlumis": -1,
-        "perjob": 50,
+        "perjob": 20,
         "runtime": 40,
         "mem_cfg": me_cfgs["default"],
         "script": 'heppy_crab_script.sh'
@@ -125,7 +125,7 @@ datasets.update({
     'TTbar_inc': {
         "ds": '/TT_TuneCUETP8M1_13TeV-powheg-pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext3-v1/MINIAODSIM',
         "maxlumis": -1,
-        "perjob": 200,
+        "perjob": 50,
         "runtime": 40,
         "mem_cfg": me_cfgs["default"],
         "script": 'heppy_crab_script.sh'
@@ -157,7 +157,7 @@ datasets.update({
     'QCD300': {
         "ds": '/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM',
         "maxlumis": -1,
-        "perjob": 500,
+        "perjob": 400,
         "runtime": 40,
         "mem_cfg": me_cfgs["hadronic"],
         "script": 'heppy_crab_script.sh'
@@ -165,7 +165,7 @@ datasets.update({
     'QCD300_ext1': {
         "ds": '/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM',
         "maxlumis": -1,
-        "perjob": 500,
+        "perjob": 400,
         "runtime": 40,
         "mem_cfg": me_cfgs["hadronic"],
         "script": 'heppy_crab_script.sh'
@@ -173,7 +173,7 @@ datasets.update({
     'QCD500': {
         "ds": '/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM',
         "maxlumis": -1,
-        "perjob": 500,
+        "perjob": 400,
         "runtime": 40,
         "mem_cfg": me_cfgs["hadronic"],
         "script": 'heppy_crab_script.sh'
@@ -181,7 +181,7 @@ datasets.update({
     'QCD500_ext1': {
         "ds": '/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM',
         "maxlumis": -1,
-        "perjob": 500,
+        "perjob": 400,
         "runtime": 40,
         "mem_cfg": me_cfgs["hadronic"],
         "script": 'heppy_crab_script.sh'
@@ -189,7 +189,7 @@ datasets.update({
     'QCD700': {
         "ds": '/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM',
         "maxlumis": -1,
-        "perjob": 300,
+        "perjob": 200,
         "runtime": 40,
         "mem_cfg": me_cfgs["hadronic"],
         "script": 'heppy_crab_script.sh'
@@ -197,7 +197,7 @@ datasets.update({
     'QCD700_ext1': {
         "ds": '/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM',
         "maxlumis": -1,
-        "perjob": 300,
+        "perjob": 200,
         "runtime": 40,
         "mem_cfg": me_cfgs["hadronic"],
         "script": 'heppy_crab_script.sh'
@@ -205,7 +205,7 @@ datasets.update({
     'QCD1000': {
         "ds": '/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/MINIAODSIM',
         "maxlumis": -1,
-        "perjob": 200,
+        "perjob": 100,
         "runtime": 40,
         "mem_cfg": me_cfgs["hadronic"],
         "script": 'heppy_crab_script.sh'
@@ -338,13 +338,16 @@ for k in ["ttHTobb", "TTbar_inc", "SingleMuon-Run2016B-PromptReco-v1"]:
     workflow_datasets["testing_withme"][k] = D
 
 workflow_datasets["testing_hadronic_withme"] = {}
-for k in ["ttHTobb", "TTbar_inc", "QCD1000", "JetHT-Run2016B-PromptReco-v1"]:
-    D = deepcopy(datasets[k])
-    D["perjob"] = int(5)
-    D["maxlumis"] = 10 * D["perjob"]
-    D["runtime"] = int(D["runtime"]/5)
-    D["mem_cfg"] = me_cfgs["hadronic"]
-    workflow_datasets["testing_hadronic_withme"][k] = D
+#for k in ["ttHTobb", "TTbar_inc", "QCD1000", "JetHT-Run2016B-PromptReco-v1"]:
+#for k in ["ttHTobb"]:
+for k in datasets.keys():
+    if "QCD" in k: # or "ttH" in k or "TTbar_inc" in k:
+        D = deepcopy(datasets[k])
+        #D["perjob"] = 10 * D["perjob"]
+        D["maxlumis"] = 100 * D["perjob"]
+        D["runtime"] = 40
+        D["mem_cfg"] = me_cfgs["hadronic"]
+        workflow_datasets["testing_hadronic_withme"][k] = D
 
 #Now select a set of datasets
 sel_datasets = workflow_datasets[args.workflow]
